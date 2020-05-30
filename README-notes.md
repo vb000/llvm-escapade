@@ -16,7 +16,7 @@ Dev mailing list is active and really helpful. It's often should be the first po
 
 ## LLVM Address Spaces
 
-Clang supports multiple address spaces. Semantics of different address spaces are intended to be target specific. For example, following code annotates the loads to be from specific address spaces:
+Clang supports multiple address spaces. For example, following code annotates the loads to be from specific address spaces:
 ```c++
 #define __remote __attribute__((address_space(1)))
 
@@ -47,7 +47,9 @@ for.body:                                         ; preds = %entry, %for.body
 }
 ```
 
-Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` are have `addrspace(1)` attribute.
+ Semantics of different address spaces are intended to be target specific. Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` are have `addrspace(1)` attribute. 
+ 
+ If a target supports casting between differetn address spaces, it must implement [`addrspacecast`](http://llvm.org/docs/LangRef.html#addrspacecast-to-instruction) instruction. AMD GPU's address space cast seems to nice reference for implementing one: https://gitlab.redox-os.org/redox-os/llvm/commit/f9fe65992283ac87b676f51b969de90aee63738e.
 
 ## LLVM IR
 
