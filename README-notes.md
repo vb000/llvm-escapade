@@ -27,8 +27,8 @@ LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_sin
 
 ## Writing LLVM Passes
 
-[Writing an LLVM Pass](http://llvm.org/docs/WritingAnLLVMPass.html)
-[WRITING AN LLVM PASS (Nice examples)](http://laure.gonnord.org/pro/research/ER03_2015/lab3_intro.pdf) 
+- [Writing an LLVM Pass](http://llvm.org/docs/WritingAnLLVMPass.html)
+- [WRITING AN LLVM PASS (Nice examples)](http://laure.gonnord.org/pro/research/ER03_2015/lab3_intro.pdf) 
 
 ## Dev mailing list
 
