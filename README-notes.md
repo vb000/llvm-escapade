@@ -14,8 +14,8 @@ Understanding high-level architecture is central for efficiently navigating thor
 - [LLVM for Grad Students](https://www.cs.cornell.edu/~asampson/blog/llvm.html) by Adrian Sampson, professor in CS at Cornell. This also does a deep dive by leveraging LLVM library based design to make it do cool stuff, along with providing a conceptual overview of LLVM.
 
 Key ideas to understand:
-- Frontend, optimizer and backend.
-- IR is the center piece in compiler optimization.
+- Frontend --> Optimizer --> Backend.
+- IR is the center piece in LLVM compiler optimizations.
 - Optimizer can be extended by writing cutom IR->IR transorfmations, also known as "passes". These passes can be out-of-source!
 - Tablegen is used to implement abstarct backend optimization alogrithms, while also using target specific data.
 - Modular library based design.
