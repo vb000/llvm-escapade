@@ -47,9 +47,11 @@ for.body:                                         ; preds = %entry, %for.body
 }
 ```
 
- Semantics of different address spaces are intended to be target specific. Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` are have `addrspace(1)` attribute. 
+Semantics of different address spaces are intended to be target specific. Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` are have `addrspace(1)` attribute. 
  
- If a target supports casting between differetn address spaces, it must implement [`addrspacecast`](http://llvm.org/docs/LangRef.html#addrspacecast-to-instruction) instruction. AMD GPU's address space cast seems to nice reference for implementing one: https://gitlab.redox-os.org/redox-os/llvm/commit/f9fe65992283ac87b676f51b969de90aee63738e.
+If a target supports casting between differetn address spaces, it must implement [`addrspacecast`](http://llvm.org/docs/LangRef.html#addrspacecast-to-instruction) instruction. AMD GPU's address space cast seems to nice reference for implementing one: https://gitlab.redox-os.org/redox-os/llvm/commit/f9fe65992283ac87b676f51b969de90aee63738e.
+ 
+Pro tip: Searching for "address space" in [LLVM Language Reference](http://llvm.org/docs/LangRef.html) provides wealth of possibilities with address spaces in LLVM.
 
 ## LLVM IR
 
