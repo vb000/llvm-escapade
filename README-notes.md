@@ -2,13 +2,28 @@
 
 The process of hacking LLVM as an absolute beginnner with no compilers knowledge.
 
-## The problem
+## The problem I'm trying to solve
 
-In a custom RISC-V architecture I'm trying to program, there are two disctinct address spaces. Loads from one address space are significantly slower than loads from the other. The goal is modify the the cost model and instruction scheduler to hide latencies by schduling all the slow loads together with minimum immediate dependencies.
+In a custom RISC-V architecture I'm trying to program, there are two disctinct address spaces. Loads from one address space are significantly slower than loads from the other. The goal is modify the the cost model and instruction scheduler to hide latencies, by schduling all the slow loads together with minimum immediate dependencies.
 
-## Get source, compile and run some programs.
+## Understanding LLVM design and learning to build & use it
 
-Learned the high-level architecture of LLVM compiler and how custom passes work.
+Understanding high-level architecture is central for efficiently navigating thorugh the plethora of documentation. Found these resource very helpful to get a conceptual understanding of LLVM and why it stands apart from other similar projects:
+
+- [Intro to LLVM](http://www.aosabook.org/en/llvm.html) by the lead architect of LLVM.
+- [LLVM for Grad Students](https://www.cs.cornell.edu/~asampson/blog/llvm.html) by Adrian Sampson, professor in CS at Cornell. This also does a deep dive by leveraging LLVM library based design to make it do cool stuff, along with providing a conceptual overview of LLVM.
+
+Key ideas to understand:
+- Frontend, optimizer and backend.
+- IR is the center piece in compiler optimization.
+- Optimizer can be extended by writing cutom IR->IR transorfmations, also known as "passes". These passes can be out-of-source!
+- Tablegen is used to implement abstarct backend optimization alogrithms, while also using target specific data.
+- Modular library based design.
+- Agile software engineering -- not afraid of breaking backward compatibility!
+
+## LLVM IR
+
+LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_single_assignment_form) based representation of the program compiled by LLVM. LLVM IR is defacto format for optimizations in LLVM.
 
 ## Dev mailing list
 
@@ -47,12 +62,8 @@ for.body:                                         ; preds = %entry, %for.body
 }
 ```
 
-Semantics of different address spaces are intended to be target specific. Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` are have `addrspace(1)` attribute. 
+Semantics of different address spaces are intended to be target specific. Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` have `addrspace(1)` attribute. 
  
-If a target supports casting between differetn address spaces, it must implement [`addrspacecast`](http://llvm.org/docs/LangRef.html#addrspacecast-to-instruction) instruction. AMD GPU's address space cast seems to nice reference for implementing one: https://gitlab.redox-os.org/redox-os/llvm/commit/f9fe65992283ac87b676f51b969de90aee63738e.
+If a target supports casting between different address spaces, it must implement [`addrspacecast`](http://llvm.org/docs/LangRef.html#addrspacecast-to-instruction) instruction. AMD GPU's address space cast seems to nice reference for implementing one: https://gitlab.redox-os.org/redox-os/llvm/commit/f9fe65992283ac87b676f51b969de90aee63738e.
  
 Pro tip: Searching for "address space" in [LLVM Language Reference](http://llvm.org/docs/LangRef.html) provides wealth of possibilities with address spaces in LLVM.
-
-## LLVM IR
-
-LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_single_assignment_form) based representation of the program compiled by LLVM. LLVM IR is defacto format for optimizations in LLVM.
