@@ -25,6 +25,11 @@ Key ideas to understand:
 
 LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_single_assignment_form) based representation of the program compiled by LLVM. LLVM IR is defacto format for optimizations in LLVM.
 
+## Writing LLVM Passes
+
+[Writing an LLVM Pass](http://llvm.org/docs/WritingAnLLVMPass.html)
+[WRITING AN LLVM PASS (Nice examples)](http://laure.gonnord.org/pro/research/ER03_2015/lab3_intro.pdf) 
+
 ## Dev mailing list
 
 Dev mailing list is active and really helpful. It's often should be the first point of renference to get an informed opinion on the approaches to consider. I got to know that LLVM has the concept of address space which seems to be precisely what I needed. 
