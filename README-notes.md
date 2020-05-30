@@ -12,7 +12,11 @@ Learned the high-level architecture of LLVM compiler and how custom passes work.
 
 ## Dev mailing list
 
-Dev mailing list is active and really helpful. It's often should be the first point of renference to get an informed opinion on the approaches to consider. I got to know that LLVM has the concept of address space which seems to be precisely what I need. Clang supports multiple address spaces. For example, this annotates the loads to be from specific address spaces:
+Dev mailing list is active and really helpful. It's often should be the first point of renference to get an informed opinion on the approaches to consider. I got to know that LLVM has the concept of address space which seems to be precisely what I needed. 
+
+## LLVM Address Spaces
+
+Clang supports multiple address spaces. Semantics of different address spaces are intended to be target specific. For example, following code annotates the loads to be from specific address spaces:
 ```c++
 #define __remote __attribute__((address_space(1)))
 
@@ -25,7 +29,7 @@ int kernel_vec_add(__remote int *dst, const __remote int *src, const int size) {
   return 0;
 }
 ```
-The loop above results in IR like this (notice address space annotations in the IR):
+The loop above results in IR like this (notice address space annotations on pointers):
 ```llvm
 for.body:                                         ; preds = %entry, %for.body
   %i.07 = phi i32 [ %inc, %for.body ], [ 0, %entry ]
@@ -43,6 +47,8 @@ for.body:                                         ; preds = %entry, %for.body
 }
 ```
 
+Pointers in LLVM can have numbered address space attribute. Default address space is address spaces 0. In the program above, pointers annotated with `__remote` are have `addrspace(1)` attribute.
+
 ## LLVM IR
 
-LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_single_assignment_form) based representation of the program compiled by LLVM. LLVM IR is defacto format for optimization in LLVM.
+LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_single_assignment_form) based representation of the program compiled by LLVM. LLVM IR is defacto format for optimizations in LLVM.
