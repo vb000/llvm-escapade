@@ -108,6 +108,8 @@ index 00000000000..596391c236f
 +static RegisterPass<VanillaPass> X("vanilla", "Vanilla Pass");
 ```
 
+Based on [this](https://llvm.org/docs/WritingAnLLVMPass.html#registering-dynamically-loaded-passes), possibly there is way to load out-of-source passes to the LLVM backend (`llc`). TODO: check this out. 
+
 ## Dev mailing list
 
 Dev mailing list is active and really helpful. It's often should be the first point of renference to get an informed opinion on the approaches to consider. I got to know that LLVM has the concept of address space which seems to be precisely what I needed. 
