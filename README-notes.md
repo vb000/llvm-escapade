@@ -152,3 +152,8 @@ Semantics of different address spaces are intended to be target specific. Pointe
 If a target supports casting between different address spaces, it must implement [`addrspacecast`](http://llvm.org/docs/LangRef.html#addrspacecast-to-instruction) instruction. AMD GPU's address space cast seems to nice reference for implementing one: https://gitlab.redox-os.org/redox-os/llvm/commit/f9fe65992283ac87b676f51b969de90aee63738e.
  
 Pro tip: Searching for "address space" in [LLVM Language Reference](http://llvm.org/docs/LangRef.html) provides wealth of possibilities with address spaces in LLVM.
+
+## Scheduler Pass
+
+An additional scheduler pass might be necessary to schedule slow loads together. This seems to be a nice reference:
+https://llvm.org/doxygen/PostRASchedulerList_8cpp_source.html
