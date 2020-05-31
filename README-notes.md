@@ -108,7 +108,7 @@ index 00000000000..596391c236f
 +static RegisterPass<VanillaPass> X("vanilla", "Vanilla Pass");
 ```
 
-Based on [this](https://llvm.org/docs/WritingAnLLVMPass.html#registering-dynamically-loaded-passes), possibly there is way to load out-of-source passes to the LLVM backend (`llc`). TODO: check this out. 
+Based on [this](https://llvm.org/docs/WritingAnLLVMPass.html#registering-dynamically-loaded-passes), possibly, there is a way to load out-of-source passes to the LLVM backend (`llc`). TODO: check this out. 
 
 ## Dev mailing list
 
