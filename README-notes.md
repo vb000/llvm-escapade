@@ -30,7 +30,83 @@ LLVM IR is a [Static Single Assignemnt](https://en.wikipedia.org/wiki/Static_sin
 - [Writing an LLVM Pass](http://llvm.org/docs/WritingAnLLVMPass.html)
 - [WRITING AN LLVM PASS (Nice examples)](http://laure.gonnord.org/pro/research/ER03_2015/lab3_intro.pdf)
 
-`MachineFunctionPass` seems promising for this problem.
+`MachineFunctionPass` seems promising for this problem. Following seems to work for RISCV:
+```diff
+diff --git a/llvm/lib/Target/RISCV/CMakeLists.txt b/llvm/lib/Target/RISCV/CMakeLists.txt
+index 31a82be1981..521c43a82ea 100644
+--- a/llvm/lib/Target/RISCV/CMakeLists.txt
++++ b/llvm/lib/Target/RISCV/CMakeLists.txt
+@@ -17,6 +17,7 @@ tablegen(LLVM RISCVGenSystemOperands.inc -gen-searchable-tables)
+ add_public_tablegen_target(RISCVCommonTableGen)
+
+ add_llvm_target(RISCVCodeGen
++  VanillaPasses.cpp
+   RISCVAsmPrinter.cpp
+   RISCVCallLowering.cpp
+   RISCVExpandPseudoInsts.cpp
+diff --git a/llvm/lib/Target/RISCV/RISCV.h b/llvm/lib/Target/RISCV/RISCV.h
+index f23f742a478..2ca2f7f5611 100644
+--- a/llvm/lib/Target/RISCV/RISCV.h
++++ b/llvm/lib/Target/RISCV/RISCV.h
+@@ -43,6 +43,9 @@ void initializeRISCVMergeBaseOffsetOptPass(PassRegistry &);
+ FunctionPass *createRISCVExpandPseudoPass();
+ void initializeRISCVExpandPseudoPass(PassRegistry &);
+
++FunctionPass *createRISCVVanillaPass();
++void initializeRISCVVanillaPass(PassRegistry &);
++
+ InstructionSelector *createRISCVInstructionSelector(const RISCVTargetMachine &,
+                                                     RISCVSubtarget &,
+                                                     RISCVRegisterBankInfo &);
+diff --git a/llvm/lib/Target/RISCV/RISCVTargetMachine.cpp b/llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+index de71c01753d..4e171387756 100644
+--- a/llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
++++ b/llvm/lib/Target/RISCV/RISCVTargetMachine.cpp
+@@ -174,6 +174,7 @@ void RISCVPassConfig::addPreEmitPass2() {
+   // possibility for other passes to break the requirements for forward
+   // progress in the LR/SC block.
+   addPass(createRISCVExpandPseudoPass());
++  addPass(createRISCVVanillaPass());
+ }
+
+ void RISCVPassConfig::addPreRegAlloc() {
+diff --git a/llvm/lib/Target/RISCV/VanillaPasses.cpp b/llvm/lib/Target/RISCV/VanillaPasses.cpp
+new file mode 100644
+index 00000000000..596391c236f
+--- /dev/null
++++ b/llvm/lib/Target/RISCV/VanillaPasses.cpp
+@@ -0,0 +1,30 @@
++#include "RISCV.h"
++#include "llvm/Pass.h"
++#include "llvm/CodeGen/MachineFunctionPass.h"
++#include "llvm/CodeGen/MachineFunction.h"
++#include "llvm/Support/raw_ostream.h"
++
++using namespace llvm;
++
++namespace {
++
++struct VanillaPass : public MachineFunctionPass {
++  static char ID;
++
++  VanillaPass(): MachineFunctionPass(ID) {}
++
++  bool runOnMachineFunction(MachineFunction &MF) override {
++    errs() << "VanillaPass: ";
++    errs() << MF.getName() << "\n";
++    return false;
++  }
++};
++
++}
++
++FunctionPass* llvm::createRISCVVanillaPass() {
++  return new VanillaPass();
++}
++
++char VanillaPass::ID = 0;
++static RegisterPass<VanillaPass> X("vanilla", "Vanilla Pass");
+```
 
 ## Dev mailing list
 
