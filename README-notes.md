@@ -157,3 +157,35 @@ Pro tip: Searching for "address space" in [LLVM Language Reference](http://llvm.
 
 An additional scheduler pass might be necessary to schedule slow loads together. This seems to be a nice reference:
 https://llvm.org/doxygen/PostRASchedulerList_8cpp_source.html
+
+## Things worth trying with scheduling
+
+`--disable-sched-reg-pressure` (list-ilp)
+`--max-sched-reorder` (list-ilp)
+```
+  --misched=<value>                                               - Machine instruction scheduler to use
+    =default                                                      -   Use the target's default scheduler
+ choice.
+    =converge                                                     -   Standard converging scheduler.
+    =ilpmax                                                       -   Schedule bottom-up for max ILP
+    =ilpmin                                                       -   Schedule bottom-up for min ILP
+    =shuffle                                                      -   Shuffle machine instructions alter
+nating directions
+  --misched-bottomup                                              - Force bottom-up list scheduling
+  --misched-cluster                                               - Enable memop clustering.
+  --misched-cutoff=<uint>                                         - Stop scheduling after N instructions
+  --misched-cyclicpath                                            - Enable cyclic critical path analysis
+.
+  --misched-dcpl                                                  - Print critical path length to stdout
+  --misched-fusion                                                - Enable scheduling for macro fusion.
+  --misched-limit=<uint>                                          - Limit ready list to N instructions
+  --misched-only-block=<uint>                                     - Only schedule this MBB#
+  --misched-only-func=<string>                                    - Only schedule this function
+  --misched-postra                                                - Run MachineScheduler post regalloc (
+independent of preRA sched)
+  --misched-print-dags                                            - Print schedule DAGs
+  --misched-regpressure                                           - Enable register pressure scheduling.
+  --misched-topdown                                               - Force top-down list scheduling
+  --misfetch-cost=<uint>                                          - Cost that models the probabilistic r
+isk of an instruction misfetch due to a jump comparing to falling through, whose cost is zero.
+```
