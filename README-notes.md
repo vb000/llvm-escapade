@@ -160,8 +160,8 @@ https://llvm.org/doxygen/PostRASchedulerList_8cpp_source.html
 
 ## Things worth trying with scheduling
 
-`--disable-sched-reg-pressure` (list-ilp)
-`--max-sched-reorder` (list-ilp)
+- `--disable-sched-reg-pressure` (list-ilp)
+- `--max-sched-reorder` (list-ilp)
 ```
   --misched=<value>                                               - Machine instruction scheduler to use
     =default                                                      -   Use the target's default scheduler
@@ -268,7 +268,7 @@ int vec_add(__remote int* a, __remote int* b, int n) {
 
 ```
 
-#### Attempt 2: Load Latency = 2; Bottom-up scheduling algorithm; No register pressure;
+#### Attempt 3: Load Latency = 2; Bottom-up scheduling algorithm; No register pressure;
 
 ```
    addi  a2, a0, 8
@@ -297,3 +297,57 @@ int vec_add(__remote int* a, __remote int* b, int n) {
  ```
  
  Bottom-up scheduling seems bad for non-blocking loads
+
+#### Attempt 4: Load Latency = 20; Top-down scheduling algorithm; No register pressure;
+
+```
+.LBB0_4:                                # %for.body
+                                        # =>This Inner Loop Header: Depth=1
+  lw  a7, -8(a5)
+  lw  t0, -8(a2)
+  lw  t1, -4(a2)
+  lw  t2, 0(a2)
+  lw  t3, 4(a2)
+  addi  a4, a4, 4
+  add a3, t0, a7
+  sw  a3, -8(a2)
+  lw  a3, -4(a5)
+  add a3, t1, a3
+  sw  a3, -4(a2)
+  lw  a3, 0(a5)
+  add a3, t2, a3
+  sw  a3, 0(a2)
+  lw  a3, 4(a5)
+  addi  a5, a5, 16
+  add a3, t3, a3
+  sw  a3, 4(a2)
+  addi  a2, a2, 16
+  bne a6, a4, .LBB0_4
+```
+
+#### Attempt 5: Load Latency = 20; Bottom-up scheduling algorithm; No register pressure;
+
+```
+.LBB0_4:                                # %for.body
+                                        # =>This Inner Loop Header: Depth=1
+  lw  a7, -8(a5)
+  lw  a3, -8(a2)
+  add a3, a3, a7
+  sw  a3, -8(a2)
+  lw  a7, -4(a5)
+  lw  a3, -4(a2)
+  add a3, a3, a7
+  sw  a3, -4(a2)
+  lw  a7, 0(a5)
+  lw  a3, 0(a2)
+  add a3, a3, a7
+  sw  a3, 0(a2)
+  lw  a7, 4(a5)
+  lw  a3, 4(a2)
+  add a3, a3, a7
+  sw  a3, 4(a2)
+  addi  a4, a4, 4
+  addi  a5, a5, 16
+  addi  a2, a2, 16
+  bne a6, a4, .LBB0_4
+```
