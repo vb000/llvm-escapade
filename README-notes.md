@@ -195,3 +195,5 @@ isk of an instruction misfetch due to a jump comparing to falling through, whose
 Starting with scheduler architecture:
 
 RISCV backend seems to use the MIScheduler which is intending to be modern replacement of ScheduleDAG. [Slide 15 here](https://llvm.org/devmtg/2016-09/slides/Absar-SchedulingInOrder.pdf) provides a great overview of the APIs.
+
+In case latency cannot be modelled in tablegen, this is the function that give the instruction latency: https://llvm.org/doxygen/classllvm_1_1MCSubtargetInfo.html#ab5c894b844ecc7efdb7c932d351a320c
