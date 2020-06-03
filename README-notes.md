@@ -200,7 +200,7 @@ In case latency cannot be modelled in tablegen, this is the function that give t
 
 ### Test program
 
-```
+```c
 #define __remote __attribute__((address_space(1)))
 
 int vec_add(__remote int* a, __remote int* b, int n) {
@@ -213,7 +213,7 @@ int vec_add(__remote int* a, __remote int* b, int n) {
 }
 ```
 
-#### Attempt 1: Load Latency = 20; top-down scheduling algorithm; no register pressure;
+#### Attempt 1: Load Latency = 20; Top-down scheduling algorithm; No register pressure;
 
 ```
 .LBB0_4:                                # %for.body
