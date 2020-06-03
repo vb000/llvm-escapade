@@ -351,3 +351,17 @@ int vec_add(__remote int* a, __remote int* b, int n) {
   addi  a2, a2, 16
   bne a6, a4, .LBB0_4
 ```
+
+## Custom Scheduling
+
+```c++
+
+ /// Example Machine Function Pass for Vanilla Core
+ class VanillaScheduler : public GenericScheduler {
+ public:
+   VanillaScheduler(const MachineSchedContext *C): GenericScheduler(C) {}
+
+ protected:
+   SUnit *pickNode (bool &IsTopNode) override;
+ };
+```
