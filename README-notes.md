@@ -213,7 +213,7 @@ int vec_add(__remote int* a, __remote int* b, int n) {
 }
 ```
 
-#### Attempt 1: Load Latency = 20; Top-down scheduling algorithm; No register pressure;
+#### Attempt 1: Load Latency = 2; Top-down scheduling algorithm; No register pressure;
 
 ```
 .LBB0_4:                                # %for.body
@@ -239,3 +239,61 @@ int vec_add(__remote int* a, __remote int* b, int n) {
   addi  a2, a2, 16
   bne a6, a4, .LBB0_4
 ```
+
+#### Attempt 2: Load Latency = 2; Bottom-up scheduling algorithm; Register pressure = 6;
+
+```riscv
+.LBB0_4:                                # %for.body
+                                        # =>This Inner Loop Header: Depth=1
+  lw  a7, -8(a5)
+  lw  a3, -8(a2)
+  add a3, a3, a7
+  sw  a3, -8(a2)
+  lw  a7, -4(a5)
+  lw  a3, -4(a2)
+  add a3, a3, a7
+  sw  a3, -4(a2)
+  lw  a7, 0(a5)
+  lw  a3, 0(a2)
+  add a3, a3, a7
+  sw  a3, 0(a2)
+  lw  a7, 4(a5)
+  lw  a3, 4(a2)
+  add a3, a3, a7
+  sw  a3, 4(a2)
+  addi  a4, a4, 4
+  addi  a5, a5, 16
+  addi  a2, a2, 16
+  bne a6, a4, .LBB0_4
+
+```
+
+#### Attempt 2: Load Latency = 2; Bottom-up scheduling algorithm; No register pressure;
+
+```
+   addi  a2, a0, 8
+ .LBB0_4:                                # %for.body
+                                         # =>This Inner Loop Header: Depth=1
+   lw  a7, -8(a5)
+   lw  a3, -8(a2)
+   add a3, a3, a7
+   sw  a3, -8(a2)
+   lw  a7, -4(a5)
+   lw  a3, -4(a2)
+   add a3, a3, a7
+   sw  a3, -4(a2)
+   lw  a7, 0(a5)
+   lw  a3, 0(a2)
+   add a3, a3, a7
+   sw  a3, 0(a2)
+   lw  a7, 4(a5)
+   lw  a3, 4(a2)
+   add a3, a3, a7
+   sw  a3, 4(a2)
+   addi  a4, a4, 4
+   addi  a5, a5, 16
+   addi  a2, a2, 16
+   bne a6, a4, .LBB0_4
+ ```
+ 
+ Bottom-up scheduling seems bad for non-blocking loads
