@@ -194,6 +194,48 @@ isk of an instruction misfetch due to a jump comparing to falling through, whose
 
 Starting with scheduler architecture:
 
-RISCV backend seems to use the MIScheduler which is intending to be modern replacement of ScheduleDAG. [Slide 15 here](https://llvm.org/devmtg/2016-09/slides/Absar-SchedulingInOrder.pdf) provides a great overview of the APIs.
+RISCV backend seems to use the MIScheduler which is intending to be modern replacement of legacy ScheduleDAG. [Slide 15 here](https://llvm.org/devmtg/2016-09/slides/Absar-SchedulingInOrder.pdf) provides a great overview of the APIs.
 
 In case latency cannot be modelled in tablegen, this is the function that give the instruction latency: https://llvm.org/doxygen/classllvm_1_1MCSubtargetInfo.html#ab5c894b844ecc7efdb7c932d351a320c
+
+### Test program
+
+```
+#define __remote __attribute__((address_space(1)))
+
+int vec_add(__remote int* a, __remote int* b, int n) {
+  #pragma unroll 4
+  for(int i=0; i<n; ++i) {
+    a[i] += b[i];
+  }
+
+  return 0;
+}
+```
+
+#### Attempt 1: Load Latency = 20; top-down scheduling algorithm; no register pressure;
+
+```
+.LBB0_4:                                # %for.body
+                                        # =>This Inner Loop Header: Depth=1
+  lw  a7, -8(a5)
+  lw  t0, -8(a2)
+  lw  t1, -4(a2)
+  add a3, t0, a7
+  sw  a3, -8(a2)
+  lw  a3, -4(a5)
+  lw  a7, 0(a2)
+  add a3, t1, a3
+  sw  a3, -4(a2)
+  lw  a3, 0(a5)
+  lw  t0, 4(a2)
+  add a3, a7, a3
+  sw  a3, 0(a2)
+  lw  a3, 4(a5)
+  addi  a4, a4, 4
+  add a3, t0, a3
+  sw  a3, 4(a2)
+  addi  a5, a5, 16
+  addi  a2, a2, 16
+  bne a6, a4, .LBB0_4
+```
