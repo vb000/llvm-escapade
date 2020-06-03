@@ -189,3 +189,9 @@ independent of preRA sched)
   --misfetch-cost=<uint>                                          - Cost that models the probabilistic r
 isk of an instruction misfetch due to a jump comparing to falling through, whose cost is zero.
 ```
+
+## Modifying Non-Blocking Load Latency
+
+Starting with scheduler architecture:
+
+RISCV backend seems to use the MIScheduler which is intending to be modern replacement of ScheduleDAG. [Slide 15 here](https://llvm.org/devmtg/2016-09/slides/Absar-SchedulingInOrder.pdf) provides a great overview of the APIs.
